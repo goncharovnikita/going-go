@@ -120,3 +120,63 @@ func TestTarize(t *testing.T) {
 	os.Remove(tarizedFilename)
 
 }
+
+func TestUntarize(t *testing.T) {
+	var err error
+	var file *os.File
+	var filename = "testfile.txt"
+	var tarizedFilename = "testfile.tar"
+	var dirname = "testfile"
+	var content = "some test content"
+	var buf = new(bytes.Buffer)
+
+	os.Remove(filename)
+	os.Remove(tarizedFilename)
+	os.RemoveAll(dirname)
+
+	if file, err = os.OpenFile(filename, os.O_CREATE|os.O_RDWR, 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err = file.Write([]byte(content)); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = file.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = archives.Tarize(filename); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = archives.Untarize(tarizedFilename); err != nil {
+		t.Fatal(err)
+	}
+
+	t.Log(os.Getwd())
+
+	if err = os.Chdir(dirname); err != nil {
+		t.Fatal(err)
+	}
+
+	if file, err = os.OpenFile(filename, os.O_RDONLY, 0644); err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err = buf.ReadFrom(file); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = file.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, content, string(buf.Bytes()))
+
+	os.Chdir("..")
+
+	os.Remove(filename)
+	os.Remove(tarizedFilename)
+	os.RemoveAll(dirname)
+}

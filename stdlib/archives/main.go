@@ -3,6 +3,7 @@ package main
 import (
 	"archive/tar"
 	"bytes"
+	"io"
 	"log"
 	"os"
 	"strings"
@@ -21,6 +22,10 @@ func main() {
 			log.Fatalln(err)
 		}
 		break
+	case "untar":
+		if err := Untarize(args[2]); err != nil {
+			log.Fatalln(err)
+		}
 	default:
 		printUsage()
 	}
@@ -61,6 +66,66 @@ func Tarize(filename string) error {
 
 	// Close archive
 	if err = file.Close(); err != nil {
+		return err
+	}
+
+	return err
+}
+
+// Untarize unpack tar archive
+func Untarize(filename string) error {
+	var err error
+	var file *os.File
+	var hdr *tar.Header
+	var untarizedFilename = GetUntarizedName(filename)
+
+	if !isTar(filename) {
+		return fileIsNotTarError{
+			Filename: filename,
+		}
+	}
+
+	if file, err = os.OpenFile(filename, os.O_RDONLY, 0644); err != nil {
+		return err
+	}
+
+	var tr = tar.NewReader(file)
+	if err = os.Mkdir(untarizedFilename, os.FileMode(0777)); err != nil {
+		return err
+	}
+	if err = os.Chdir(untarizedFilename); err != nil {
+		return err
+	}
+
+	for {
+		hdr, err = tr.Next()
+		var b = new(bytes.Buffer)
+		var f *os.File
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			return err
+		}
+		if f, err = os.OpenFile(hdr.Name, os.O_CREATE|os.O_RDWR, 0644); err != nil {
+			return err
+		}
+		if _, err = b.ReadFrom(tr); err != nil {
+			return err
+		}
+		if _, err = f.Write(b.Bytes()); err != nil {
+			return err
+		}
+		if err = f.Close(); err != nil {
+			return err
+		}
+	}
+
+	if err = file.Close(); err != nil {
+		return err
+	}
+
+	if err = os.Chdir(".."); err != nil {
 		return err
 	}
 
