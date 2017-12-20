@@ -40,6 +40,30 @@ func TestCompressGzip(t *testing.T) {
 	assert.Equal(t, testData, string(buf.Bytes()))
 }
 
+func TestDecompressGzip(t *testing.T) {
+	var (
+		data   = []byte("some test data")
+		buf    = new(bytes.Buffer)
+		gw     = gzip.NewWriter(buf)
+		result []byte
+		err    error
+	)
+
+	if _, err = gw.Write(data); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = gw.Close(); err != nil {
+		t.Fatal(err)
+	}
+
+	if result, err = compress.DecompressGzip(buf.Bytes()); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, data, result)
+}
+
 func TestGzipify(t *testing.T) {
 	var (
 		filename   = "filename"
