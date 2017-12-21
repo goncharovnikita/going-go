@@ -11,7 +11,7 @@ func main() {
 	heap.Push(h, 1000)
 	fmt.Printf("min %d\n", (*h)[0])
 	for h.Len() > 0 {
-		fmt.Printf("%d\n", h.Pop())
+		fmt.Printf("%d\n", heap.Pop(h))
 	}
 }
 
@@ -27,6 +27,6 @@ func (h *IntHeap) Pop() interface{} {
 	old := *h
 	n := len(old)
 	x := old[n-1]
-	*h = old[:n-1]
+	*h = old[0 : n-1]
 	return x
 }
