@@ -6,14 +6,14 @@ func Insertion(arr []int) (result []int) {
 		return arr
 	}
 	result = arr
-	for i := 1; i < len(result); i++ {
-		key := result[i]
-		j := i - 1
-		for j > 0 && result[j] > key {
-			result[j+1] = result[j]
-			j--
+	for j := 1; j < len(result); j++ {
+		key := result[j]
+		i := j - 1
+		for i >= 0 && result[i] > key {
+			result[i+1] = result[i]
+			i--
 		}
-		result[j+1] = key
+		result[i+1] = key
 	}
 	return
 }
