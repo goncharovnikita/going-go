@@ -7,9 +7,15 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestInsertion(t *testing.T) {
-	arr := []int{2, 4, 1, 3, 6, 5}
-	expected := []int{1, 2, 3, 4, 5, 6}
+var testCases = []map[string][]int{
+	{
+		"test":     {2, 4, 1, 3, 6, 5},
+		"expected": {1, 2, 3, 4, 5, 6},
+	},
+}
 
-	assert.Equal(t, expected, sorting.Insertion(arr))
+func TestInsertion(t *testing.T) {
+	for _, v := range testCases {
+		assert.Equal(t, v["expected"], sorting.Insertion(v["test"]))
+	}
 }
