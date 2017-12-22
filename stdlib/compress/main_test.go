@@ -22,8 +22,6 @@ func TestCompressGzip(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	t.Log(result)
-
 	reader := bytes.NewReader(result)
 	if gr, err = gzip.NewReader(reader); err != nil {
 		t.Fatal(err)
@@ -38,6 +36,28 @@ func TestCompressGzip(t *testing.T) {
 	}
 
 	assert.Equal(t, testData, string(buf.Bytes()))
+}
+
+func TestDecompressGzip(t *testing.T) {
+	var (
+		data   = []byte("some test data")
+		buf    = new(bytes.Buffer)
+		err    error
+		gw     *gzip.Writer
+		result []byte
+	)
+
+	gw = gzip.NewWriter(buf)
+
+	if _, err = gw.Write(data); err != nil {
+		t.Fatal(err)
+	}
+
+	if result, err = compress.DecompressGzip(buf.Bytes()); err != nil {
+		t.Fatal(err)
+	}
+
+	assert.Equal(t, data, result)
 }
 
 func TestGzipify(t *testing.T) {

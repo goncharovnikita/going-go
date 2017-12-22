@@ -1,8 +1,11 @@
 package main
 
-import "bytes"
-import "compress/gzip"
-import "os"
+import (
+	"bytes"
+	"compress/gzip"
+	"fmt"
+	"os"
+)
 
 func main() {}
 
@@ -22,6 +25,31 @@ func CompressGzip(filename string, file []byte) (result []byte, err error) {
 	}
 
 	return buf.Bytes(), err
+}
+
+// DecompressGzip decompress gzipped stream
+func DecompressGzip(d []byte) (result []byte, err error) {
+	var (
+		b  = new(bytes.Buffer)
+		gr *gzip.Reader
+	)
+
+	reader := bytes.NewReader(d)
+	if gr, err = gzip.NewReader(reader); err != nil {
+		return nil, err
+	}
+
+	if err = gr.Close(); err != nil {
+		return nil, err
+	}
+
+	if _, err = b.ReadFrom(gr); err != nil {
+		fmt.Println(gr)
+		fmt.Println(err)
+		return nil, err
+	}
+
+	return b.Bytes(), err
 }
 
 // Gzipify compress given data to .gz file
@@ -50,8 +78,16 @@ func Gzipify(filename string, data []byte) (err error) {
 }
 
 // Gunzip ungzip compressed file
-// func Gunzip(filename string) (result []byte, err error)  {
+// func Gunzip(filename string) (result []byte, err error) {
 // 	var (
-// 		gr *gzip.Reader
+// 		buf  = new(bytes.Buffer)
+// 		gr   *gzip.Reader
+// 		file *os.File
 // 	)
+
+// 	if file, err = os.OpenFile(filename, os.O_RDONLY, 0644); err != nil {
+// 		return
+// 	}
+
+// 	return
 // }
