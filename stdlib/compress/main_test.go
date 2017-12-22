@@ -42,14 +42,16 @@ func TestDecompressGzip(t *testing.T) {
 	var (
 		data   = []byte("some test data")
 		buf    = new(bytes.Buffer)
-		err    error
-		gw     *gzip.Writer
+		gw     = gzip.NewWriter(buf)
 		result []byte
+		err    error
 	)
 
-	gw = gzip.NewWriter(buf)
-
 	if _, err = gw.Write(data); err != nil {
+		t.Fatal(err)
+	}
+
+	if err = gw.Close(); err != nil {
 		t.Fatal(err)
 	}
 

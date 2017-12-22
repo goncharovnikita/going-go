@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
+	"io"
 	"os"
 )
 
@@ -27,15 +28,21 @@ func CompressGzip(filename string, file []byte) (result []byte, err error) {
 	return buf.Bytes(), err
 }
 
-// DecompressGzip decompress gzipped stream
-func DecompressGzip(d []byte) (result []byte, err error) {
+// DecompressGzip decompress gicen data
+func DecompressGzip(data []byte) (result []byte, err error) {
 	var (
-		b  = new(bytes.Buffer)
-		gr *gzip.Reader
+		reader = bytes.NewReader(data)
+		buf    = new(bytes.Buffer)
+		gr     *gzip.Reader
 	)
 
-	reader := bytes.NewReader(d)
 	if gr, err = gzip.NewReader(reader); err != nil {
+		return nil, err
+	}
+
+	fmt.Println(buf)
+
+	if _, err = io.Copy(buf, gr); err != nil {
 		return nil, err
 	}
 
@@ -43,13 +50,9 @@ func DecompressGzip(d []byte) (result []byte, err error) {
 		return nil, err
 	}
 
-	if _, err = b.ReadFrom(gr); err != nil {
-		fmt.Println(gr)
-		fmt.Println(err)
-		return nil, err
-	}
+	result = buf.Bytes()
 
-	return b.Bytes(), err
+	return result, err
 }
 
 // Gzipify compress given data to .gz file
