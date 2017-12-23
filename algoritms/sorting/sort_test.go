@@ -19,3 +19,9 @@ func TestInsertion(t *testing.T) {
 		assert.Equal(t, v["expected"], sorting.Insertion(v["test"]))
 	}
 }
+
+func TestSelection(t *testing.T) {
+	for _, v := range testCases {
+		assert.Equal(t, v["expected"], sorting.Selection(v["test"]))
+	}
+}
