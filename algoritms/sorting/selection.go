@@ -3,16 +3,15 @@ package sorting
 // Selection sort
 func Selection(arr []int) (result []int) {
 	result = make([]int, len(arr))
-	for i := 0; i < len(arr)-1; i++ {
-		j := arr[i]
-		for k := i; k < len(arr); k++ {
-			key := arr[k]
-			if key < j {
-				j = key
+	copy(result, arr)
+	for i := 0; i < len(result)-1; i++ {
+		minIndex := i
+		for k := i + 1; k < len(result); k++ {
+			if result[k] < result[minIndex] {
+				minIndex = k
 			}
 		}
-		result[i] = j
+		result[i], result[minIndex] = result[minIndex], result[i]
 	}
-	result[len(arr)-1] = arr[len(arr)-1]
 	return result
 }
