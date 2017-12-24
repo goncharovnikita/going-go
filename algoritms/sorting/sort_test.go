@@ -43,3 +43,11 @@ func TestMerge(t *testing.T) {
 	}
 	fmt.Printf("Merge sort takes %s\n", time.Since(start))
 }
+
+func TestBubble(t *testing.T) {
+	start := time.Now()
+	for _, v := range testCases {
+		assert.Equal(t, v["expected"], sorting.Bubble(v["test"]))
+	}
+	fmt.Printf("Bubble sort takes %s\n", time.Since(start))
+}
