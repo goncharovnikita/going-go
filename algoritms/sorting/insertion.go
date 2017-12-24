@@ -2,10 +2,11 @@ package sorting
 
 // Insertion sort
 func Insertion(arr []int) (result []int) {
-	if len(arr) < 2 {
-		return arr
+	result = make([]int, len(arr))
+	copy(result, arr)
+	if len(result) < 2 {
+		return result
 	}
-	result = arr
 	for j := 1; j < len(result); j++ {
 		key := result[j]
 		i := j - 1
