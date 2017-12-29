@@ -81,16 +81,22 @@ func Gzipify(filename string, data []byte) (err error) {
 }
 
 // Gunzip ungzip compressed file
-// func Gunzip(filename string) (result []byte, err error) {
-// 	var (
-// 		buf  = new(bytes.Buffer)
-// 		gr   *gzip.Reader
-// 		file *os.File
-// 	)
+func Gunzip(filename string) (result []byte, err error) {
+	var (
+		gr   *gzip.Reader
+		file *os.File
+	)
 
-// 	if file, err = os.OpenFile(filename, os.O_RDONLY, 0644); err != nil {
-// 		return
-// 	}
+	if file, err = os.OpenFile(filename, os.O_RDONLY, 0644); err != nil {
+		return
+	}
 
-// 	return
-// }
+	reader := bytes.NewReader(file.)
+	gr = gzip.NewReader(reader)
+
+	for {
+
+	}
+
+	return
+}
