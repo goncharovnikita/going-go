@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
@@ -14,6 +16,9 @@ func main() {
 	case "chdir":
 		ChDir(os.Args[2])
 		break
+	case "rr":
+		ReadRecursive(os.Args[2], 1)
+		break
 	}
 }
 
@@ -21,3 +26,42 @@ func main() {
 func ChDir(dirname string) {
 	log.Fatal(os.Chdir(dirname))
 }
+
+// ReadRecursive func
+func ReadRecursive(filename string, depth int) {
+	var (
+		file  *os.File
+		info  os.FileInfo
+		infos []os.FileInfo
+		err   error
+	)
+
+	if file, err = os.Open(filename); err != nil {
+		log.Fatal(err)
+	}
+
+	defer file.Close()
+	if info, err = file.Stat(); err != nil {
+		log.Fatal(err)
+	}
+
+	if isDir := info.IsDir(); isDir == true {
+		fmt.Printf("%s %s/\n", strings.Repeat("-", depth), info.Name())
+		if infos, err = file.Readdir(0); err != nil {
+			log.Fatal(err)
+		}
+		for _, v := range infos {
+			ReadRecursive(fmt.Sprintf("%s/%s", filename, v.Name()), depth+1)
+		}
+	} else {
+		fmt.Printf("%s %s\n", strings.Repeat("-", depth), info.Name())
+	}
+}
+
+// ReadDir func
+// func ReadDir(dirname string) {
+// 	var (
+// 		infos []os.FileInfo
+// 		err error
+// 	)
+// }
