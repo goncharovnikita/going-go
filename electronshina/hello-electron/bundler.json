@@ -1,0 +1,9 @@
+{
+  "app_name": "Test",
+  "environments": [
+    {"arch": "amd64", "os": "linux"}
+  ],
+  "icon_path_linux": "./assets/icon.png",
+  "input_path": "./",
+  "output_path": "./output"
+}

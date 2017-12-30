@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -17,7 +18,9 @@ func main() {
 		ChDir(os.Args[2])
 		break
 	case "rr":
+		start := time.Now()
 		ReadRecursive(os.Args[2], 1)
+		fmt.Printf("Read recursive taken %s\n", time.Since(start))
 		break
 	}
 }
