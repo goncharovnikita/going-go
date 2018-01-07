@@ -7,7 +7,8 @@ import (
 )
 
 func main() {
-	r := ReaderType{someData: []byte("testData")}
+	var reader continuousReader
+	r := reader.newReader("some test string\n")
 	io.Copy(os.Stdout, r)
 }
 
