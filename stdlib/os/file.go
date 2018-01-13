@@ -1,4 +1,4 @@
-package main
+package os
 
 import (
 	"fmt"
@@ -59,6 +59,25 @@ func ReadRecursive(filename string, depth int) {
 	} else {
 		fmt.Printf("%s %s\n", strings.Repeat("-", depth), info.Name())
 	}
+}
+
+// AppendToFile appends text to file
+func AppendToFile(filename string, text string) (err error) {
+	var (
+		file *os.File
+	)
+
+	if file, err = os.OpenFile(filename, os.O_APPEND|os.O_RDWR, 0755); err != nil {
+		return
+	}
+
+	defer file.Close()
+
+	if _, err = file.Write([]byte(text)); err != nil {
+		return
+	}
+
+	return
 }
 
 // ReadDir func
